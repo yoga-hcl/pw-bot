@@ -1,0 +1,24 @@
+{
+  "name": "browserassistantbot",
+  "version": "1.0.0",
+  "description": "api to automate the browser app's (MS-Team, Zoom, 8x8) using web automation framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "watch": "nodemon index.js"
+  },
+  "author": "yogav",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "log4js": "^6.4.5",
+    "playwright": "^1.21.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
