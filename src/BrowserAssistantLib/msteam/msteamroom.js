@@ -39,6 +39,7 @@ const join = async(page, url, userName) => {
 
   // Fill [placeholder="Enter name"]
   await page.locator('[placeholder="Enter name"]').fill(userName);
+  //
 
   // Click button:has-text("Enable video")
   await page.locator('button:has-text("Enable video")').click();
@@ -46,7 +47,18 @@ const join = async(page, url, userName) => {
   // Click text=Join now
   await page.locator('text=Join now').click(); //Note: click event not working while browser prompt pop-up
 
+  //however operation
+  //await page.locator('.ts-calling-myself-video').click();
+  //await page.$('div.ts-calling-screen').click();
+  // Pause on the following line.
+  //await page.pause();
 };
+
+
+const showCallBar = async(page) => {
+  await page.locator('.ts-calling-myself-video').click();
+}
+
 
 const exit = async(page) => {
   // Click [aria-label="Hang up"]
@@ -81,22 +93,98 @@ const sendChat = async(page, msg) => {
   return true;
 };
 
-const startReadChat = async(page) => {
+const stopReadChat = async(page) => {
+  logger.debug(`stop reading chat triggered !`);
+  await page.unroute('**/events/poll');
   return true;
 };
 
-const stopReadChat = async(page) => {
+const processChatMsg = async(page, msg) => {
+  //find wake word 'Hi Bot'
+  const givenMsg = msg.trim().replace('[\\r,\\n]',''); //replace new lines
+  const wakeWord = 'Hi Bot';
+  if(msg.length > 0) {
+    //const wakeWordPattern = `^(${wakeWord}*|${wakeWord}([/\s|,|.]))`;
+    const wakeWordPattern = `^(${wakeWord}[,|.|\s])`;
+    const wakeWordRegExp =  new RegExp(wakeWordPattern, 'i');
+    if(wakeWordRegExp.test(givenMsg)) {
+      logger.debug(`wake word ${wakeWord} successfully matched!`);
+      let cmd = givenMsg.replace(wakeWordRegExp, '');
+      if(cmd.length > 0) {
+        cmd = cmd.trim().replace('[\\r,\\n]',''); //replace new lines
+        logger.debug(`given command is '${cmd}'`);
+      } else {
+        logger.warn(`no command has given for execution !`);
+      }
+    } else {
+      logger.debug(`wake word ${wakeWord} failed to match!`);
+    }
+  }
+}
+
+const readChatMsg = async(page, msgInfo) => {
+  if(msgInfo) {
+    //logger.trace(`msgInfo: ${JSON.stringify(msgInfo)}`);
+    const clientMsgId = msgInfo.clientmessageid;
+    const content = msgInfo.content;
+    const senderName = msgInfo.imdisplayname;
+    if(clientMsgId == undefined || content == undefined || senderName == undefined) {
+      logger.warn(`Reading chat message failed. 'sendername' or 'content' information missing !`);
+      return false;
+    }
+    logger.debug(`msgId: ${clientMsgId}, msg: ${content}, sender: ${senderName}`);
+    //stopReadChat(page); //added for functional testing
+    if(senderName !== 'Bot (Guest)') {
+      return processChatMsg(page, content); 
+    }
+  } else {
+    logger.error(`Reading chat message failed. 'MsgInfo' is null !`);
+  }
+};
+
+const startReadChat = async(page) => {
+  await page.route('**/events/poll', (route, request) => {
+    //console.log(request.url());
+    logger.trace(request.url());
+    const response = request.response();
+    response.then(resp => {
+      const jsonData = resp.json();
+      jsonData.then(data => {
+        //logger.trace(`${JSON.stringify(data)}`);
+        //const next = data['next'];
+        //const eventMsg = data['eventMessages'];
+        if(data.eventMessages) {
+          const evlen = data.eventMessages.length;
+          let evMsg = null;
+          if(evlen > 0) {
+            evMsg = data.eventMessages[0];
+          } else {
+            evMsg = data.eventMessages;
+          }
+          if(evMsg.resource) {
+            readChatMsg(page, evMsg.resource);
+          } else {
+            logger.error(`chat message info is empty or null !`);
+          }
+        }
+      });
+    }, reject => {
+      logger.error(`error while handling response`);
+    });
+    route.continue();
+  });
+
   return true;
 };
 
 const startScreenShare = async(page) => {
-
   return true;
 };
 
 const stopScreenShare = async(page) => {
   return true;  
 };
+
 
 module.exports = {
   join,
@@ -109,4 +197,5 @@ module.exports = {
   stopReadChat,  
   startScreenShare,
   stopScreenShare,
+  showCallBar,
 }

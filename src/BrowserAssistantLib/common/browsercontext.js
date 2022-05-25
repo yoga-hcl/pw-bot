@@ -10,7 +10,6 @@ class BrowserContext {
     this._config = config;
     this._browser = browser;
     this._context = context;
-    this._pages = undefined; //array
     this._self = this;
   }
 
@@ -18,8 +17,9 @@ class BrowserContext {
     logger.info(`Initializing 'BrowserContext'.`);
     const headless = config.headless;
     const channel = config.channel;
+    const slowMo = config.slowMo;
     const permissions = config.permissions;
-    const browser = await chromium.launch({ headless, channel });
+    const browser = await chromium.launch({ headless, channel, slowMo });
     const context = await browser.newContext();
     context.grantPermissions(permissions);
     let browserContext = new BrowserContext(config, browser, context);
@@ -36,6 +36,29 @@ class BrowserContext {
     this._browser.close();
   }
 
+  createPage = async() => {
+    const page = await this._context.newPage();
+    if(page) {
+      const pageId = page._guid;
+      logger.info(`New page '${pageId}' successfully created.`);      
+      //enable playwirght trace in separate file for this room
+      await this._browser.startTracing(page, {path: 'roomtrace.json'});
+      return page;
+    } 
+    return null;
+  }    
+
+  deletePage = async(page) => {
+    if(page) {
+      const pageId = page._guid;
+      logger.info(`Page '${pageId}' successfully closed.`);      
+      page.close();
+      return true;
+    }
+    logger.error(`Closing page failed!. not valid page.`);
+    return false;
+  }
+
   //common browsercontext properties
   getContext = () => {
     return this._context;
@@ -48,3 +71,19 @@ class BrowserContext {
 };
 
 module.exports = BrowserContext;
+
+
+
+  //page event handler function
+  /*page.on('request', request => {
+    console.log(request.url());
+    logger.trace(request.url());
+  });*/
+
+  /*page.on('requestfailed', request => {
+    console.log(request.url() + ' ' + request.failure().errorText);
+    logger.trace(request.url() + ' ' + request.failure().errorText);
+  });*/
+
+  //page.on('requestfinished');
+  //page.on('response');

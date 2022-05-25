@@ -5,7 +5,8 @@ const { joinRoom,
         closeChatWindow,
         sendChatMsg,
         startReadChat,
-        stopReadChat
+        stopReadChat,
+        showCallBar
       } = require('../BrowserAssistantLib/common/browserbot');
 const log4js = require('log4js');
 
@@ -81,7 +82,7 @@ const handleStartReadChatRequest = async(req, res) => {
   try {
     const roomId = req.body.roomId;
     result = await startReadChat(roomId);
-    res.send(200).send(`Successfully started to read chat messages. RoomId is '${result}'`);
+    res.send(`Successfully started to read chat messages. RoomId is '${result}'`);
   } catch (err) {
     logger.error(err);
     res.send(err);
@@ -92,7 +93,18 @@ const handleStopReadChatRequest = async(req, res) => {
   try {
     const roomId = req.body.roomId;
     result = await stopReadChat(roomId);
-    res.send(200).send(`Successfully stopped to read chat message. RoomId is '${result}'`);
+    res.send(`Successfully stopped to read chat message. RoomId is '${result}'`);
+  } catch (err) {
+    logger.error(err);
+    res.send(err);
+  }
+}
+
+const handleShowCallBarRequest = async(req, res) => {
+  try {
+    const roomId = req.body.roomId;
+    result = await showCallBar(roomId);
+    res.send(`Successfully showed call bar icons. RoomId is '${result}'`);
   } catch (err) {
     logger.error(err);
     res.send(err);
@@ -117,6 +129,8 @@ module.exports = (req, res) => {
     handleStartReadChatRequest(req, res);
   } else if(apiName === 'stopReadChat') {
     handleStopReadChatRequest(req, res);
+  } else if(apiName === 'showCallBar') {
+    handleShowCallBarRequest(req, res);
   } else {
     logger.error(`API '${apiName}' not found !`);
     res.send(`REST API '${apiName}' not found !`);

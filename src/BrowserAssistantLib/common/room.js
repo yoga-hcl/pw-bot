@@ -52,17 +52,10 @@ class Room {
     }
   }*/
 
-  static init = async(config, browsercontext) => {
+  static init = async(config, page) => {
     logger.info(`Initializing a '${config.app}' room`);
-    const browser = browsercontext.getBrowser();
-    const context = browsercontext.getContext();
-    const page = await context.newPage();
-
     //initialize new 'Room' instance
     const room = new Room(config, page);
-
-    //enable playwirght trace in separate file for this room
-    await browser.startTracing(page, {path: 'roomtrace.json'});
     logger.info(`Initialized a '${config.app}' room successfully!`);
     return room;
   }
@@ -109,15 +102,21 @@ class Room {
     return this._self;
   }
 
-  startReadChat = async() => {
+  startReadChat = async(roomId) => {
     logger.info(`Start reading chat messages. RoomId is '${this._roomId}'`);
     await msteamroom.startReadChat(this._page);
     return this._self;
   }
 
-  stopReadChat = async() => {
+  stopReadChat = async(roomId) => {
     logger.info(`Stop reading chat messages. RoomId is '${this._roomId}'`);
     await msteamroom.stopReadChat(this._page);
+    return this._self;
+  }
+
+  showCallBar = async() => {
+    logger.info(`trying to show call bar icons. RoomId is '${this._roomId}'`);
+    await msteamroom.showCallBar(this._page);
     return this._self;
   }
 

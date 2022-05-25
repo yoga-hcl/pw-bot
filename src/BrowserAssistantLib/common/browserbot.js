@@ -30,6 +30,10 @@ class BrowserBot {
       this._browserContext = null;
       this._room = null;
       this.constructor.instance = this;
+
+      //TODO: need mapping concepts between each page and application(i.e, executed within pages)
+      //Note: each page will use 'this._browserContext'
+      //send page object with application object in our case room object to controll room events.
     }
   }
 
@@ -42,9 +46,10 @@ class BrowserBot {
     this._browserContext = await BrowserContext.init(browserConfig);
     
     //initialize room object
-    const roomConfig = Constants.roomConfig;
+    /*const roomConfig = Constants.roomConfig;
     const browsercontext = this._browserContext; 
-    this._room = await Room.init(roomConfig, browsercontext);
+    this._room = await Room.init(roomConfig, browsercontext);*/
+    await this.createRoom(); //Yoga, added for functional testing purpose
     
     this._state = BotState.INITIALIZED;
     logger.info(`Initialized 'BrowserBot' successfully!`);
@@ -77,9 +82,15 @@ class BrowserBot {
     }
   }
 
-  createRoom = () => {
+  createRoom = async() => {
     logger.trace(`Creating a new room.`);
-    //this._room = Room.init(this._browser, Constants.roomConfig);
+    //initialize room object
+    const roomConfig = Constants.roomConfig;
+    const page = await this._browserContext.createPage();
+    this._room = await Room.init(roomConfig, page);
+    //const room = await this._room.join(); //added for functionality testing
+    //const rm = await this._room.startReadChat(room.getRoomId()); //add for functionality testing
+
   }  
 
   joinRoom = async() => {
@@ -180,7 +191,7 @@ class BrowserBot {
     const room = this._room;
     let result = null;
     if(room) {
-      result = await room.startReadChat();
+      result = await room.startReadChat(roomId);
     }
     return new Promise((resolve, reject) => {
       if(result) {
@@ -196,13 +207,29 @@ class BrowserBot {
     const room = this._room;
     let result = null;
     if(room) {
-      result = await room.stopReadChat();
+      result = await room.stopReadChat(roomId);
     }
     return new Promise((resolve, reject) => {
       if(result) {
         resolve(roomId)        
       } else {
         reject(new Error(`internal error, while stop reading chat message!`));
+      }
+    });
+  }
+
+  showCallBar = async(roomId, msg) => {
+    //TODO: Need to perform room object validation 
+    const room = this._room;
+    let result = null;
+    if(room) {
+      result = await room.showCallBar(msg);
+    }
+    return new Promise((resolve, reject) => {
+      if(result) {
+        resolve(roomId)        
+      } else {
+        reject(new Error(`internal error, while send chat message!`));
       }
     });
   }
@@ -269,4 +296,9 @@ module.exports = {
     const bot = new BrowserBot();
     return bot.stopReadChat(roomId);
   },
+
+  showCallBar: (roomId) => {
+    const bot = new BrowserBot();
+    return bot.showCallBar(roomId);
+  }
 }

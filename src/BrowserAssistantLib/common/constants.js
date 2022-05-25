@@ -6,6 +6,7 @@ const botConfig = {
 const browserConfig = {
   headless: false,
   channel: 'chrome',
+  slowMo:0,
   permissions: ['camera', 'microphone'], 
   //browserPermission: ['camera', 'microphone', 'notifications', 'background-sync', 'accessibility-events', 'clipboard-read', 'clipboard-write'],
 };
