@@ -1,0 +1,73 @@
+{
+  "app": {
+    "host": "localhost",
+    "rest-port": 4000,
+    "ws-port": 4000
+  },
+
+  "log": {
+    "log4js-config": {
+      "appenders": {
+        "consoleAppender": { "type": "stdout" },
+        "fileAppender": { "type": "file", "filename": "./logfiles/browserbot.log" }
+      },
+      "categories": {
+        "default": { "appenders": [ "consoleAppender", "fileAppender" ], "level": "info" },
+        "RESTAPP": { "appenders": [ "consoleAppender", "fileAppender" ], "level": "info" },
+        "WSAPP": { "appenders": [ "consoleAppender", "fileAppender" ], "level": "info" },
+        "PUBSUBAPP": { "appenders": [ "consoleAppender", "fileAppender" ], "level": "info" },
+        "BOTAPP": { "appenders": [ "consoleAppender", "fileAppender" ], "level": "info" },
+        "IPCAPP": { "appenders": [ "consoleAppender", "fileAppender" ], "level": "info" },
+        "ERRHANDL": { "appenders": [ "consoleAppender", "fileAppender" ], "level": "info" },
+        "UTIL": { "appenders": [ "consoleAppender", "fileAppender" ], "level": "info" },
+        "CONFIGR": { "appenders": [ "consoleAppender", "fileAppender" ], "level": "info" }
+      }
+    }
+  },
+
+  "bot": {
+    "name": "HCL-Bot",   
+    "supportedRooms": ["msteam", "zoom"]
+  },
+
+  "browser": {
+    "executablePath": "/snap/bin/firefox",
+    "headless": false,
+    "channel": "chrome",
+    "slowMo": 0,
+    "permissions": [
+      "geolocation", 
+      "midi", 
+      "midi-sysex", 
+      "notifications", 
+      "background-sync", 
+      "camera", 
+      "microphone", 
+      "background-sync", 
+      "accessibility-events", 
+      "clipboard-read", 
+      "clipboard-write"
+    ],
+    "trace": {
+      "screenshot": true,
+      "snapshot": true,
+      "path": "~/logfiles/trace.zip"
+    }
+  },
+
+  "browsercontext": {
+    "timeout": 60000,
+    "navigationTimeout": 60000
+  },
+
+  "browserpage": {
+    "timeout": 60000,
+    "navigationTimeout": 60000
+  },
+
+  "room": {
+    "url": "",
+    "botName": "",
+    "type": 0
+  }
+}

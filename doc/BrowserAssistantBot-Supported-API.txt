@@ -1,0 +1,162 @@
+zoom credential
+email - yoganathan.v@hcl.com
+password - zoom$123
+===============================================================================
+To start the BrowserAssistantBot service manually
+-------------------------------------------------
+-> go to project root directory
+-> use below command to start the service
+  >> npm start
+============================================================================ 
+REST API supported by BrowserAisstantBot service
+------------------------------------------------
+Notes: 
+-> The REST API request will be triggered from either 'VoiceAssistantBot' directly or through 'MeetingAssistantApp' serivce that will run locally in a same machine (either in VM or physical machine)
+-> After booting up the 'BrowserAssistantBot', both REST API's and WS API's request are handled through port '4000' 
+Tips: 
+-> Use 'Postman' application or 'curl' command to issue a below REST API for testing purpose.
+
+1. to join room
+URL:  'http://localhost:4000/api'
+Method: 'POST'
+inputs params: pass below 'key', 'value' inputs as 'x-www-form-urlencoded' BODY cotent
+	-> apiname: 'joinroom'
+	-> url: 'https://teams.microsoft.com/dl/launcher/launcher.html?url=%2F_%23%2Fl%2Fmeetup-join%2F19%3Ameeting_ZTVjMzlmMGEtMmZhMS00NDk0LTgyNTktMGFmOWNjNjI0YTY5%40thread.v2%2F0%3Fcontext%3D%257b%2522Tid%2522%253a%2522189de737-c93a-4f5a-8b68-6f4ca9941912%2522%252c%2522Oid%2522%253a%2522c4f3c389-3d92-4a2b-af96-928c8fe50477%2522%257d%26anon%3Dtrue&type=meetup-join&deeplinkId=9f403e7e-3d48-457a-a838-4c5af5d6fdda&directDl=true&msLaunch=true&enableMobilePage=true'
+	-> botname: 'HCL-BOT'
+Return: 
+-> 200 OK with room id value (ex: 'page@b26e405e29eaa4babe7f539f312f5341') as a success response
+-> 200 OK with empty room id as a failure response
+
+2. to exit room
+URL:  'http://localhost:4000/api'
+Method: 'POST'
+inputs params: pass below 'key', 'value' inputs as 'x-www-form-urlencoded' BODY cotent
+	-> apiname: 'exitroom'
+	-> roomid: 'page@b26e405e29eaa4babe7f539f312f5341'
+Return: 	
+-> 200 OK with room id value (ex: 'page@b26e405e29eaa4babe7f539f312f5341') as a success response
+-> 200 OK with empty room id as a failure response
+
+3. to rejoin room 
+URL:  'http://localhost:4000/api'
+Method: 'POST'
+inputs params: pass below 'key', 'value' inputs as 'x-www-form-urlencoded' BODY cotent
+	-> apiname: 'rejoinroom'
+	-> roomid: 'page@b26e405e29eaa4babe7f539f312f5341'
+Return: 	
+-> 200 OK with room id value (ex: 'page@b26e405e29eaa4babe7f539f312f5341') as a success response
+-> 200 OK with empty room id as a failure response
+
+4. to delete room (Not yet implemented)
+URL:  'http://localhost:4000/api'
+Method: 'POST'
+inputs params: pass below 'key', 'value' inputs as 'x-www-form-urlencoded' BODY cotent
+	-> apiname: 'deleteroom'
+	-> roomid: 'page@b26e405e29eaa4babe7f539f312f5341'
+Return: 	
+-> 200 OK with room id value (ex: 'page@b26e405e29eaa4babe7f539f312f5341') as a success response
+-> 200 OK with empty room id as a failure response
+
+5. to open chat window in a room
+URL:  'http://localhost:4000/api'
+Method: 'POST'
+inputs params: pass below 'key', 'value' inputs as 'x-www-form-urlencoded' BODY cotent
+	-> apiname: 'openchatwindow'
+	-> roomid: 'page@b26e405e29eaa4babe7f539f312f5341'
+Return: 	
+-> 200 OK with room id value (ex: 'page@b26e405e29eaa4babe7f539f312f5341') as a success response
+-> 200 OK with empty room id as a failure response
+
+6. to close chat window in a room
+URL:  'http://localhost:4000/api'
+Method: 'POST'
+inputs params: pass below 'key', 'value' inputs as 'x-www-form-urlencoded' BODY cotent
+	-> apiname: 'closechatwindow'
+	-> roomid: 'page@b26e405e29eaa4babe7f539f312f5341'
+Return: 	
+-> 200 OK with room id value (ex: 'page@b26e405e29eaa4babe7f539f312f5341') as a success response
+-> 200 OK with empty room id as a failure response
+
+7. to start read all the incoming chat messages from chat window
+URL:  'http://localhost:4000/api'
+Method: 'POST'
+inputs params: pass below 'key', 'value' inputs as 'x-www-form-urlencoded' BODY cotent
+	-> apiname: 'startreadchat'
+	-> roomid: 'page@b26e405e29eaa4babe7f539f312f5341'
+Return: 	
+-> 200 OK with room id value (ex: 'page@b26e405e29eaa4babe7f539f312f5341') as a success response
+-> 200 OK with empty room id as a failure response
+
+7. to stop read chat messages from chat window
+URL:  'http://localhost:4000/api'
+Method: 'POST'
+inputs params: pass below 'key', 'value' inputs as 'x-www-form-urlencoded' BODY cotent
+	-> apiname: 'stopreadchat'
+	-> roomid: 'page@b26e405e29eaa4babe7f539f312f5341'
+Return: 	
+-> 200 OK with room id value (ex: 'page@b26e405e29eaa4babe7f539f312f5341') as a success response
+-> 200 OK with empty room id as a failure response
+
+8. to start screen sharing (Not yet tested)
+URL:  'http://localhost:4000/api'
+Method: 'POST'
+inputs params: pass below 'key', 'value' inputs as 'x-www-form-urlencoded' BODY cotent
+	-> apiname: 'startscreenshare'
+	-> roomid: 'page@b26e405e29eaa4babe7f539f312f5341'
+Return: 	
+-> 200 OK with room id value (ex: 'page@b26e405e29eaa4babe7f539f312f5341') as a success response
+-> 200 OK with empty room id as a failure response
+
+8. to stop screen sharing (Not yet tested)
+URL:  'http://localhost:4000/api'
+Method: 'POST'
+inputs params: pass below 'key', 'value' inputs as 'x-www-form-urlencoded' BODY cotent
+	-> apiname: 'stopscreenshare'
+	-> roomid: 'page@b26e405e29eaa4babe7f539f312f5341'
+Return: 	
+-> 200 OK with room id value (ex: 'page@b26e405e29eaa4babe7f539f312f5341') as a success response
+-> 200 OK with empty room id as a failure response
+
+=====================================================================================================================
+'PUBSUB' request using websocket
+--------------------------------
+-> to subscribe for getting chat message from 'BrowserAisstantBot' the subscriber should send below subscriber message in JSON format
+Subscriber should send a “subscriber” notification in json formate to websocket server
+{
+  "messagetype" : "pubsub"
+  "notification" : "subscribe" //publish, subscibe, unsubscribe
+  "message" : "", //it might be plain text or json content
+  "channel" : "send-chat-message" //channel is nothing but a topic
+}
+
+-> to unsubscribe to stop recieving chat message from 'BrowserAisstantBot'
+Subscriber should send a “unsubscriber” notification in json formate to websocket server
+{
+  "messagetype" : "pubsub"
+  "notification" : "unsubscribe" //publish, subscibe, unsubscribe
+  "message" : "", //it might be plain text or json content
+  "channel" : "send-chat-message" //channel is nothing but a topic
+}
+
+-> publisher (i.e 'BrowserAisstantBot') will stream te chat message in below JSON format
+{
+  "messagetype" : "pubsub"
+  "notification" : "publish" //publish, subscibe, unsubscribe
+  "message" : "{"contentid": "10001", "sender": "yoganathan v", "content": "Hi Bot, share a screen"}", //it might be plain text or json content
+  "channel" : "send-chat-message" //channel is nothing but a topic
+}
+=============================================================================================================================
+-> sample "BrowserAisstantBotTest" team room meeting url
+https://teams.microsoft.com/dl/launcher/launcher.html?url=%2F_%23%2Fl%2Fmeetup-join%2F19%3Ameeting_ZTVjMzlmMGEtMmZhMS00NDk0LTgyNTktMGFmOWNjNjI0YTY5%40thread.v2%2F0%3Fcontext%3D%257b%2522Tid%2522%253a%2522189de737-c93a-4f5a-8b68-6f4ca9941912%2522%252c%2522Oid%2522%253a%2522c4f3c389-3d92-4a2b-af96-928c8fe50477%2522%257d%26anon%3Dtrue&type=meetup-join&deeplinkId=9f403e7e-3d48-457a-a838-4c5af5d6fdda&directDl=true&msLaunch=true&enableMobilePage=true'
+
+https://teams.microsoft.com/_#/l/meetup-join/19:meeting_ZDhiOWI0M2EtY2EzMi00ODQzLTkzMjgtODg5MzcxM2ExZmM4@thread.v2/0?context=%7B%22Tid%22:%22189de737-c93a-4f5a-8b68-6f4ca9941912%22,%22Oid%22:%22c4f3c389-3d92-4a2b-af96-928c8fe50477%22%7D&anon=true&deeplinkId=eb2f5acc-d3c8-4d6f-9919-9b4b19547c41
+-------------------------------------------------------
+https://teams.microsoft.com/_#/l/meetup-join/19:meeting_ZDhiOWI0M2EtY2EzMi00ODQzLTkzMjgtODg5MzcxM2ExZmM4@thread.v2/0?context=%7B%22Tid%22:%22189de737-c93a-4f5a-8b68-6f4ca9941912%22,%22Oid%22:%22c4f3c389-3d92-4a2b-af96-928c8fe50477%22%7D&anon=true&deeplinkId=eb2f5acc-d3c8-4d6f-9919-9b4b19547c41
+==========================================================================================================================
+-> url of "UC Solution Review" room
+https://apc01.safelinks.protection.outlook.com/ap/t-59584e83/?url=https%3A%2F%2Fteams.microsoft.com%2Fl%2Fmeetup-join%2F19%253ameeting_NTQzNWEyMzMtNTNmNS00ZGU1LTkwOWEtM2UyNjUwODBiM2E0%2540thread.v2%2F0%3Fcontext%3D%257b%2522Tid%2522%253a%2522189de737-c93a-4f5a-8b68-6f4ca9941912%2522%252c%2522Oid%2522%253a%2522a2c716eb-da5b-46ef-8f5f-5e01c0a3d7c0%2522%257d&data=05%7C01%7Cyoganathan.v%40hcl.com%7C750bb7ab25334374e63408da493cc18c%7C189de737c93a4f5a8b686f4ca9941912%7C0%7C0%7C637902822530423154%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=PRGFf%2BtaVRbN8F2jgEs14T82a0dmKcjVWFfwiNnN08c%3D&reserved=0
+
+https://teams.microsoft.com/_#/l/meetup-join/19:meeting_NTQzNWEyMzMtNTNmNS00ZGU1LTkwOWEtM2UyNjUwODBiM2E0@thread.v2/0?context=%7b%22Tid%22%3a%22189de737-c93a-4f5a-8b68-6f4ca9941912%22%2c%22Oid%22%3a%22a2c716eb-da5b-46ef-8f5f-5e01c0a3d7c0%22%7d&anon=true&deeplinkId=a9e52f69-b4d6-4c57-ad5e-1c20da89c4b3
+
+
+
